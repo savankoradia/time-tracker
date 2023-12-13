@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en" class="h-100" ng-app="timerApp" ng-controller="timerController">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="{{application.description}}">
+    <meta name="author" content="{{application.author}}">
+    <title>{{application.name}}</title>
+    <link href="./assets/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            min-width: 300px;
+        }
+
+        .badge .close {
+            margin-left: .25rem;
+            color: inherit;
+            font-size: 100%;
+        }
+    </style>
+</head>
+
+<body class="d-flex flex-column h-100">
+
+    <header>
+        <!-- Fixed navbar -->
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="{{application.url}}">{{application.name}}</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Begin page content -->
+    <main class="flex-shrink-0">
+        <div class="container">
+            <br><br><br>
+            <h6 class="card-subtitle mb-2 text-muted">Track the time you spent on each task you work on and get time
+                conclusion result.</h6>
+            <div class="card">
+                <div class="card-body">
+                    <p class="card-text">
+                    <form ng-submit="startTimer()">
+                        <div class="mb-3">
+                            <label for="taskName" class="form-label">Task Name:</label>
+                            <input type="text" class="form-control" id="taskName" ng-model="name">
+                        </div>
+                        <button ng-if="!currentTask.id" type="submit" class="btn btn-primary">Start a timer</button>
+                        <div ng-if="currentTask.id">
+                            {{currentTimeSpentDisplay}}
+                            <button type="submit" class="btn btn-danger">Stop Timer</button>
+                        </div>
+                    </form>
+                    </p>
+                </div>
+            </div>
+            <div class="card" ng-init="getAllTasks()">
+                <div class="card-body">
+                    <h5 class="card-title">Tasks</h5>
+                    <table class="table">
+                        <tr ng-repeat="task in allTasks">
+                            <td>{{task.name}}</td>
+                            <td>{{getTimeString(task.startTime, task.endTime)}}</td>
+                        </tr>
+                        <tr>
+                            <th>Total Time Spent</th>
+                            <th>{{getTotalTimeSpent()}}</th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer mt-auto py-3 bg-light">
+        <div class="container">
+            <span class="text-muted">&copy; <a
+                    href="{{application.footer.url}}">{{application.footer.copyright}}</a></span>
+            <span><button type="button" class="btn btn-danger" ng-click="clearAll()">Clear memory</button></span>
+            <a href="options.html" target="_blank">Options</a>
+        </div>
+    </footer>
+    <script src="./assets/js/bootstrap.min.js"></script>
+    <script src="./assets/js/angular.min.js"></script>
+    <script src="./assets/application/application.js"></script>
+
+</body>
+
+</html>

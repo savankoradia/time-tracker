@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en" class="h-100" ng-app="timerApp" ng-controller="timerController">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="{{application.description}}">
+    <meta name="author" content="{{application.author}}">
+    <title>{{application.name}} | Options</title>
+    <link href="./assets/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            min-width: 300px;
+        }
+
+        .badge .close {
+            margin-left: .25rem;
+            color: inherit;
+            font-size: 100%;
+        }
+    </style>
+</head>
+
+<body class="d-flex flex-column h-100">
+
+    <header>
+        <!-- Fixed navbar -->
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="{{application.url}}">{{application.name}} | Options</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Begin page content -->
+    <main class="flex-shrink-0">
+        <div class="container">
+            <br><br><br>
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                About the App
+            </button>
+            <button type="button" class="btn btn-danger" ng-click="clearAll()">Clear memory</button>
+
+            <br><br>
+            <div class="row">
+                <div class="d-flex flex-column flex-shrink-0 p-3 bg-light col-md-12">
+                    <span class="fs-4">Your tracked time!</span>
+                    <hr>
+                    <div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Start Time</th>
+                                    <th scope="col">End Time</th>
+                                    <th scope="col">Time Spent</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="task in allTasks" ng-init="parentIndex = $index">
+                                    <th scope="row">{{$index + 1}}</th>
+                                    <td>{{task.name}}</td>
+                                    <td>{{task.startTime | date:'MM/dd/yyyy HH:mm:ss'}}</td>
+                                    <td>{{task.endTime | date:'MM/dd/yyyy HH:mm:ss'}}</td>
+                                    <td>{{getTimeString(task.startTime, task.endTime)}}</td>
+                                </tr>
+
+                                <tr>
+                                    <th scope="row"></th>
+                                    <td></td>
+                                    <td></td>
+                                    <th>Total Time</th>
+                                    <th>{{getTotalTimeSpent()}}</th>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <br><br>
+            <div class="row">
+                <div class="d-flex flex-column flex-shrink-0 p-3 bg-light col-md-12">
+                    <span class="fs-4">Group by Tasks</span>
+                    <hr>
+                    <div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Task Counts</th>
+                                    <th scope="col">Time Spent</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="task in getTasksByName()" ng-init="parentIndex = $index">
+                                    <th scope="row">{{$index + 1}}</th>
+                                    <td>{{task.name}}</td>
+                                    <td>{{task.count}}</td>
+                                    <td>{{msToTime(task.timeSpent)}}</td>
+                                </tr>
+
+                                <tr>
+                                    <th scope="row"></th>
+                                    <td></td>
+                                    <th>Total Time</th>
+                                    <th>{{getTotalTimeSpent()}}</th>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">About the App</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul>
+                        <li>Track time for each task</li>
+                        <li>Continue tracking time, even if the browser is closed.</li>
+                        <li>Get list of all tracked tasks</li>
+                        <li>Get list of all tasks group by its name</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer mt-auto py-3 bg-light">
+        <div class="container">
+            <span class="text-muted">&copy; <a
+                    href="{{application.footer.url}}">{{application.footer.copyright}}</a></span>
+        </div>
+    </footer>
+    <script src="./assets/js/bootstrap.min.js"></script>
+    <script src="./assets/js/angular.min.js"></script>
+    <script src="./assets/application/application.js"></script>
+
+</body>
+
+</html>
