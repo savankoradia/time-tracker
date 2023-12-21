@@ -29,11 +29,11 @@ angular.module('timerApp', [])
          * @param {*} milliseconds 
          * @returns 
          */
-        $scope.msToTime = function(milliseconds) {
+        $scope.msToTime = function (milliseconds) {
             const hours = Math.floor(milliseconds / (1000 * 60 * 60));
             const minutes = Math.floor((milliseconds % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((milliseconds % (1000 * 60)) / 1000);
-            return `${hours}:${minutes}:${seconds}`;
+            return `${hours}h ${minutes}m ${seconds}s`;
         }
 
         /**
@@ -113,6 +113,8 @@ angular.module('timerApp', [])
             promise = $interval(function () {
                 $scope.currentTimeSpentDisplay = $scope.getTimeString($scope.currentTask.startTime, new Date().getTime());
             }, 1000);
+            chrome.action.setBadgeText({ text: ">" });
+            pulseBadge();
             $scope.saveTask();
 
         };
@@ -122,6 +124,7 @@ angular.module('timerApp', [])
          */
         $scope.stopTimer = function () {
             $scope.currentTask.endTime = Date.now();
+            chrome.action.setBadgeText({ text: "" });
             $scope.currentTask.timeSpent = $scope.currentTask.endTime - $scope.currentTask.startTime;
             $scope.saveTask();
             $scope.currentTask = {
@@ -149,7 +152,10 @@ angular.module('timerApp', [])
                 $scope.name = $scope.currentTask.name;
                 promise = $interval(function () {
                     $scope.currentTimeSpentDisplay = $scope.getTimeString($scope.currentTask.startTime, new Date().getTime());
+                    chrome.action.setBadgeText({ text: ">" });
                 }, 1000);
+
+                pulseBadge();
                 $scope.$apply();
             }
         };
@@ -161,7 +167,9 @@ angular.module('timerApp', [])
         $scope.getTotalTimeSpent = function () {
             var totalTime = 0;
             Object.entries($scope.allTasks).forEach(([key, value]) => {
-                totalTime += (value.endTime - value.startTime);
+                if (value.endTime && value.startTime) {
+                    totalTime += (value.endTime - value.startTime);
+                }
             });
             return $scope.msToTime(totalTime);
         };
@@ -197,3 +205,11 @@ angular.module('timerApp', [])
         };
 
     }]);
+
+function pulseBadge() {
+    chrome.action.setBadgeBackgroundColor({ color: "#FF0000" }); // Red
+    setTimeout(() => {
+        chrome.action.setBadgeBackgroundColor({ color: "#EE0000" }); // Slightly darker red
+    }, 500);
+    setTimeout(pulseBadge, 1000); // Repeat every second
+}
